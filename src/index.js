@@ -4,10 +4,18 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import DashBoard from "./components/DashBoard";
+import { render } from "react-dom";
+import { Provider } from "react-redux";
+import { createStore } from "redux";
+import reduxApp from "./reducers";
+
+let store = createStore(reduxApp);
 
 ReactDOM.render(
   <React.StrictMode>
-    <DashBoard />
+    <Provider store={store}>
+      <DashBoard />
+    </Provider>
   </React.StrictMode>,
   document.getElementById("root")
 );
