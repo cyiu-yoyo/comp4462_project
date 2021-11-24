@@ -1,11 +1,26 @@
 import React, { Component } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import * as d3 from 'd3';
-// import data from "";
+import * as vsup from 'vsup';
 
 class HeatMap extends React.Component {
     constructor(props) {
         super(props);
+
+        // initialize color scale
+        var red = "#b2182b", yellow = "#fee090", blue = "#abd9e9";
+        var interpolateIsoRdBu = d3.scaleLinear()
+            .domain([0, 0.5, 1])
+            .range([blue, yellow, red])
+            .interpolate(d3.interpolateLab);
+        var vDom = [1, 10], uDom = [0, 1];
+        var quantization = vsup.quantization().branching(2).layers(4).valueDomain(vDom).uncertaintyDomain(uDom);
+        var vsupScale = vsup.scale().quantize(quantization).range(interpolateIsoRdBu);
+        var colorScale = d3.scaleLinear()
+            .domain([1, 5, 10])
+            .range([blue, yellow, red])
+            .interpolate(d3.interpolateLab);
+
         this.state = {
             start_time: 0,
             end_time: 1,
@@ -17,28 +32,74 @@ class HeatMap extends React.Component {
                 sewer_and_water: false,
                 buildings: false
             },
-            uncertainty: true
+            uncertainty: true,
+            vsupScale,
+            colorScale
         }
     }
 
     componentDidMount() {
         console.log("HeatMap did mount...")
+
+
+
+        this.drawHeatmap(this.state.vsupScale, this.state.colorScale);
+        this.drawLegend(this.state.vsupScale, this.state.colorScale);
     }
 
     componentDidUpdate() {
         console.log("HeatMap did update...")
-        this.drawHeatmap();
+        this.drawHeatmap(this.state.vsupScale, this.state.colorScale);
     }
 
-    drawHeatmap = (attribute, uncertainty) => {
-        let colorScale1, colorScale2, colorScale3, colorScale4;
-        d3.csv("./heatmapdata.csv").then(function (data) {
+    drawLegend = (vsupScale, colorScale) => {
+        // vsup legend
+        var vsupLegend = vsup.legend.arcmapLegend();
+        vsupLegend
+            .scale(vsupScale)
+            .size(160)
+            .x(0)
+            .y(0)
+            .vtitle("Intensity Reported")
+            .utitle("Uncertainty");
+
+        d3.select("#vsupLegend").selectAll("svg").remove();
+        let vsupLegendSvg = d3
+            .select("#vsupLegend").append("svg")
+            .attr("width", 300)
+            .attr("height", 300)
+            .append("g")
+            .attr("transform", "translate(15,40)");
+        vsupLegendSvg.append("g").call(vsupLegend)
+
+        // color legend
+        var colorLegend = vsup.legend.simpleLegend();
+        colorLegend
+            .scale(colorScale)
+            .size(160)
+            .x(0)
+            .y(0)
+            .title("Intensity reported");
+
+        d3.select("#colorLegend").selectAll("svg").remove();
+        let colorLegendSvg = d3
+            .select("#colorLegend").append("svg")
+            .attr("width", 300)
+            .attr("height", 50)
+            .append("g")
+            .attr("transform", "translate(15,0)");
+        colorLegendSvg.append("g").call(colorLegend)
+    }
+
+    drawHeatmap = (vsupScale, colorScale) => {
+
+        d3.csv("./merge_ui.csv").then((data) => {
             console.log("rawdata", data)
 
             // preprocess data
-            let start_time = Date.parse("2020-04-06 12:00:00")
+            let start_time = Date.parse("2020-04-08 6:00:00")
             let interval = 30 * 60 * 1000; // 30 min * 60 s * 1000 ms
-            let heatdata = [];
+            let heatdata = [], time_range = [];
             for (let i = 0; i < 20; i++) {
                 // fix 20 time intervals
                 let curtime = start_time + i * interval;
@@ -47,26 +108,107 @@ class HeatMap extends React.Component {
                 // console.log(datestring)
                 // console.log(data.filter(d => d.index == datestring))
                 data.filter(d => d.index == datestring).forEach(d => {
+                    let intensity = 0, uncertainty = 0, count = 0;
+                    if (parseFloat(d.medical_i) != -1 && this.state.attribute.medical) {
+                        intensity += parseFloat(d.medical_i);
+                        uncertainty += parseFloat(d.medical_u);
+                        count += 1;
+                    }
+                    if (parseFloat(d.power_i) != -1 && this.state.attribute.power) {
+                        intensity += parseFloat(d.power_i);
+                        uncertainty += parseFloat(d.power_u);
+                        count += 1;
+                    }
+                    if (parseFloat(d.sewer_and_water_i) != -1 && this.state.attribute.sewer_and_water) {
+                        intensity += parseFloat(d.sewer_and_water_i);
+                        uncertainty += parseFloat(d.sewer_and_water_u);
+                        count += 1;
+                    }
+                    if (parseFloat(d.roads_and_bridges_i) != -1 && this.state.attribute.roads_and_bridges) {
+                        intensity += parseFloat(d.roads_and_bridges_i);
+                        uncertainty += parseFloat(d.roads_and_bridges_u);
+                        count += 1;
+                    }
+                    if (parseFloat(d.buildings_i) != -1 && this.state.attribute.buildings) {
+                        intensity += parseFloat(d.buildings_i);
+                        uncertainty += parseFloat(d.buildings_u);
+                        count += 1;
+                    }
+
                     heatdata.push({
                         time: curtime,
                         time_string: d.index,
                         location: parseInt(d.location),
-                        medical: { intensity: parseFloat(d.medical), uncertainty: 0 },
-                        power: { intensity: parseFloat(d.power), uncertainty: 0 },
-                        roads_and_bridges: { intensity: parseFloat(d.roads_and_bridges), uncertainty: 0 },
-                        sewer_and_water: { intensity: parseFloat(d.sewer_and_water), uncertainty: 0 },
-                        buildings: { intensity: parseFloat(d.buildings), uncertainty: 0 },
+                        intensity_total: intensity / count,
+                        uncertainty_total: uncertainty / count,
+                        // medical: { intensity: parseFloat(d.medical_i), uncertainty: parseFloat(d.medical_u) },
+                        // power: { intensity: parseFloat(d.power_i), uncertainty: parseFloat(d.power_u) },
+                        // roads_and_bridges: { intensity: parseFloat(d.roads_and_bridges_i), uncertainty: parseFloat(d.roads_and_bridges_u) },
+                        // sewer_and_water: { intensity: parseFloat(d.sewer_and_water_i), uncertainty: parseFloat(d.sewer_and_water_u) },
+                        // buildings: { intensity: parseFloat(d.buildings_i), uncertainty: parseFloat(d.buildings_u) },
                     })
                 })
+                time_range.push(datestring);
             }
-            console.log("heatdata", heatdata)
+            console.log("heatdata", heatdata);
 
+            let margin = { left: 30, right: 10, top: 10, bottom: 10 },
+                width = 1200 - margin.left - margin.right,
+                height = 1000 - margin.top - margin.bottom;
 
+            d3.select("#heatmap").selectAll("svg").remove();
+            let svg = d3
+                .select("#heatmap").append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+            // x scale
+            let xScale = d3.scaleBand().range([0, width]).padding(0.1).domain(time_range);
+            // y scale
+            // sort 
+            let loc_intensity = Array.from({ length: 19 }, (_, i) => i + 1).map(i => {
+                return {
+                    location: i,
+                    intensity_total: heatdata.filter(d => d.location == i).reduce((sum, cur) => {
+                        if (cur.intensity_total > 0) return sum + cur.intensity_total
+                        else return sum
+                    }, 0)
+                }
+            })
+            console.log("location intensity", loc_intensity)
+            let yDomain;
+            if (this.state.descend) {
+                yDomain = loc_intensity.sort((a, b) => b.intensity_total - a.intensity_total).map(d => d.location)
+            } else {
+                yDomain = loc_intensity.sort((a, b) => a.intensity_total - b.intensity_total).map(d => d.location)
+            }
+            console.log("yDomain", yDomain)
+            let yScale = d3.scaleBand().range([0, height]).domain(yDomain).padding(0.1);
+
+            // color scales
+            let colorScale = d3.scaleSequential().interpolator(d3.interpolateRdBu).domain([1, 10]);
+
+            svg.selectAll()
+                .data(heatdata)
+                .enter()
+                .append("rect")
+                .attr("x", (d) => xScale(d.time_string))
+                .attr("y", (d) => yScale(d.location))
+                .attr("width", xScale.bandwidth())
+                .attr("height", yScale.bandwidth())
+                .style("fill", (d) => {
+                    if (this.state.uncertainty) return (d.intensity_total > 0) ? vsupScale(d.intensity_total, d.uncertainty_total) : "white";
+                    else return (d.intensity_total > 0) ? colorScale(d.intensity_total) : "white";
+                })
 
         }).catch(function (error) {
             // handle error   
             console.log('error in loading heatmap csv!')
         })
+
+
     }
 
     handleOrder = () => {
@@ -103,6 +245,7 @@ class HeatMap extends React.Component {
         return <div class="row">
             <div class="col-10">
                 <p>start time: {this.state.start_time}</p>
+                <div id="heatmap" />
             </div>
             <div class="col-2">
                 <span>Sort by:</span><br />
@@ -119,7 +262,12 @@ class HeatMap extends React.Component {
                 <br />
                 <br />
                 <input type="radio" name="uncertaintyRadio" id="noUncertaintyRadio" value="noUncertainty" onChange={this.handleUncertainty} /> Damage reported <br />
+                <br />
+                <div id="colorLegend"></div>
                 <input type="radio" name="uncertaintyRadio" id="uncertaintyRadio" value="uncertainty" onChange={this.handleUncertainty} /> Damage reported + Uncertainty
+                <br />
+                <br />
+                <div id="vsupLegend"></div>
             </div>
         </div>;
     }

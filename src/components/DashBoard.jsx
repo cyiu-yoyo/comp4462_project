@@ -17,7 +17,7 @@ class DashBoard extends React.Component {
             { i: 'b', x: 6, y: 0, w: 6, h: 9 },
             { i: 'c', x: 0, y: 9, w: 12, h: 4 },
             { i: 'd', x: 0, y: 13, w: 12, h: 4 },
-            { i: 'e', x: 0, y: 17, w: 12, h: 14 },
+            { i: 'e', x: 0, y: 17, w: 12, h: 27 },
         ];
         const rowHeight = 40;
         const { innerWidth: width, innerHeight: height } = window;
@@ -47,7 +47,7 @@ class DashBoard extends React.Component {
                     </div>
                 </div>
                 <div key="e">
-                    <div class="card" style={{ height: 14 * rowHeight }}>
+                    <div class="card" style={{ height: 27 * rowHeight }}>
                         <p style={{ backgroundColor: "#e9ecef", margin: "5px", paddingLeft: "5px" }}>Heatmap</p>
                         <HeatMap></HeatMap>
                     </div>
