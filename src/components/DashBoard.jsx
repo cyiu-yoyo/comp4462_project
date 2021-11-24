@@ -8,6 +8,12 @@ import HeatMap from './HeatMap';
 class DashBoard extends React.Component {
     constructor(props) {
         super(props);
+        this.state = { selectedRegion: 0 }
+    }
+
+    handleSelectRegion = (selectedRegion) => {
+        console.log("select region ", selectedRegion)
+        this.setState({ selectedRegion })
     }
 
 
@@ -19,7 +25,7 @@ class DashBoard extends React.Component {
             { i: 'd', x: 0, y: 13, w: 12, h: 4 },
             { i: 'e', x: 0, y: 17, w: 12, h: 27 },
         ];
-        const rowHeight = 40;
+        const rowHeight = 45;
         const { innerWidth: width, innerHeight: height } = window;
 
         return (<div>
@@ -27,7 +33,7 @@ class DashBoard extends React.Component {
                 <div key="a">
                     <div class="card" style={{ height: 9 * rowHeight }}>
                         <p style={{ backgroundColor: "#e9ecef", margin: "5px", paddingLeft: "5px" }}>City Map</p>
-                        <CityMap></CityMap>
+                        <CityMap onSelectRegion={(selectedRegion) => this.handleSelectRegion(selectedRegion)}></CityMap>
                     </div>
                 </div>
                 <div key="b">

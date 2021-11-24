@@ -16,10 +16,7 @@ class HeatMap extends React.Component {
         var vDom = [1, 10], uDom = [0, 1];
         var quantization = vsup.quantization().branching(2).layers(4).valueDomain(vDom).uncertaintyDomain(uDom);
         var vsupScale = vsup.scale().quantize(quantization).range(interpolateIsoRdBu);
-        // var colorScale = d3.scaleLinear()
-        //     .domain([1, 5, 10])
-        //     .range([blue, yellow, red])
-        //     .interpolate(d3.interpolateLab);
+
         var colorScale = d3
             .scaleSequential()
             .interpolator(d3.interpolateRdYlBu)
@@ -44,9 +41,6 @@ class HeatMap extends React.Component {
 
     componentDidMount() {
         console.log("HeatMap did mount...")
-
-
-
         this.drawHeatmap(this.state.vsupScale, this.state.colorScale);
         this.drawLegend(this.state.vsupScale, this.state.colorScale);
     }
