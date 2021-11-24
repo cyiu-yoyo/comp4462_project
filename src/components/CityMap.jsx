@@ -4,7 +4,7 @@ import * as d3 from 'd3';
 class CityMap extends React.Component {
     constructor(props) {
         super(props)
-        this.state = { selected_location: 0 }
+        // this.state = { selected_location: 0 }
     }
 
     componentDidMount() {
@@ -58,8 +58,9 @@ class CityMap extends React.Component {
                         .attr("opacity", 1)
                 })
                 .on("click", (event, d) => {
-                    // this.setState({ selected_location: d })
-                    this.props.onSelectRegion(d.properties.Id)
+                    let selectedRegion = [d.properties.Id, d.properties.Nbrhood]
+                    this.props.onSelectRegion(selectedRegion)
+                    // console.log("selected region: ", d)
                 })
 
             svg.selectAll(".labels")

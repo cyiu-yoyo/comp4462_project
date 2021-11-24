@@ -2,13 +2,17 @@ import React, { Component } from 'react';
 import GridLayout from 'react-grid-layout';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import CityMap from './CityMap';
-import RadarChart from './RadarChart';
+// import RadarChart from './RadarChart';
 import HeatMap from './HeatMap';
+import RadarChart from 'react-svg-radar-chart';
+import 'react-svg-radar-chart/build/css/index.css';
 
 class DashBoard extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { selectedRegion: 0 }
+        this.state = {
+            selectedRegion: [0, ""]
+        }
     }
 
     handleSelectRegion = (selectedRegion) => {
@@ -39,7 +43,45 @@ class DashBoard extends React.Component {
                 <div key="b">
                     <div class="card" style={{ height: 9 * rowHeight }}>
                         <p style={{ backgroundColor: "#e9ecef", margin: "5px", paddingLeft: "5px" }}>Radar Chart</p>
-                        <RadarChart></RadarChart>
+                        {/* <RadarChart></RadarChart> */}
+                        <div class="row" style={{ marginLeft: 30, marginTop: 10 }}>
+                            <div class="col-8">
+                                <RadarChart
+                                    captions={{
+                                        // columns
+                                        buildings: 'buildings',
+                                        medical: 'medical',
+                                        sewer_and_water: 'sewer and water',
+                                        roads_and_bridges: 'roads and bridges',
+                                        power: 'power'
+                                    }}
+                                    data={[
+                                        {
+                                            data: {
+                                                buildings: 0.4,
+                                                medical: 0.7,
+                                                sewer_and_water: 0.4,
+                                                roads_and_bridges: 0.8,
+                                                power: 0.5
+                                            },
+                                            meta: { color: '#fc9272' }
+                                        },
+                                    ]}
+                                    size={360}
+                                    options={{
+                                        captionProps: () => ({
+                                            className: 'caption',
+                                            textAnchor: 'middle',
+                                            fontSize: 15,
+                                            fontFamily: 'sans-serif'
+                                        }),
+                                    }}
+                                />
+                            </div>
+                            <div class="col-4">
+                                <h3>{this.state.selectedRegion[1]}</h3>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div key="c">
