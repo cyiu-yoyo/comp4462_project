@@ -1,26 +1,26 @@
 {
   "files": {
     "main.css": "/comp4462_project/static/css/main.8c8b27cf.chunk.css",
-    "main.js": "/comp4462_project/static/js/main.b631cf33.chunk.js",
-    "main.js.map": "/comp4462_project/static/js/main.b631cf33.chunk.js.map",
-    "runtime-main.js": "/comp4462_project/static/js/runtime-main.5f8713e4.js",
-    "runtime-main.js.map": "/comp4462_project/static/js/runtime-main.5f8713e4.js.map",
+    "main.js": "/comp4462_project/static/js/main.47d24945.chunk.js",
+    "main.js.map": "/comp4462_project/static/js/main.47d24945.chunk.js.map",
+    "runtime-main.js": "/comp4462_project/static/js/runtime-main.fee3361f.js",
+    "runtime-main.js.map": "/comp4462_project/static/js/runtime-main.fee3361f.js.map",
     "static/css/2.383c0125.chunk.css": "/comp4462_project/static/css/2.383c0125.chunk.css",
-    "static/js/2.2ac31ed9.chunk.js": "/comp4462_project/static/js/2.2ac31ed9.chunk.js",
-    "static/js/2.2ac31ed9.chunk.js.map": "/comp4462_project/static/js/2.2ac31ed9.chunk.js.map",
-    "static/js/3.b6623de1.chunk.js": "/comp4462_project/static/js/3.b6623de1.chunk.js",
-    "static/js/3.b6623de1.chunk.js.map": "/comp4462_project/static/js/3.b6623de1.chunk.js.map",
+    "static/js/2.4aaa76a9.chunk.js": "/comp4462_project/static/js/2.4aaa76a9.chunk.js",
+    "static/js/2.4aaa76a9.chunk.js.map": "/comp4462_project/static/js/2.4aaa76a9.chunk.js.map",
+    "static/js/3.1d3eaa82.chunk.js": "/comp4462_project/static/js/3.1d3eaa82.chunk.js",
+    "static/js/3.1d3eaa82.chunk.js.map": "/comp4462_project/static/js/3.1d3eaa82.chunk.js.map",
     "index.html": "/comp4462_project/index.html",
     "static/css/2.383c0125.chunk.css.map": "/comp4462_project/static/css/2.383c0125.chunk.css.map",
     "static/css/main.8c8b27cf.chunk.css.map": "/comp4462_project/static/css/main.8c8b27cf.chunk.css.map",
-    "static/js/2.2ac31ed9.chunk.js.LICENSE.txt": "/comp4462_project/static/js/2.2ac31ed9.chunk.js.LICENSE.txt",
+    "static/js/2.4aaa76a9.chunk.js.LICENSE.txt": "/comp4462_project/static/js/2.4aaa76a9.chunk.js.LICENSE.txt",
     "static/media/logo.6ce24c58.svg": "/comp4462_project/static/media/logo.6ce24c58.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.5f8713e4.js",
+    "static/js/runtime-main.fee3361f.js",
     "static/css/2.383c0125.chunk.css",
-    "static/js/2.2ac31ed9.chunk.js",
+    "static/js/2.4aaa76a9.chunk.js",
     "static/css/main.8c8b27cf.chunk.css",
-    "static/js/main.b631cf33.chunk.js"
+    "static/js/main.47d24945.chunk.js"
   ]
 }
