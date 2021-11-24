@@ -16,10 +16,14 @@ class HeatMap extends React.Component {
         var vDom = [1, 10], uDom = [0, 1];
         var quantization = vsup.quantization().branching(2).layers(4).valueDomain(vDom).uncertaintyDomain(uDom);
         var vsupScale = vsup.scale().quantize(quantization).range(interpolateIsoRdBu);
-        var colorScale = d3.scaleLinear()
-            .domain([1, 5, 10])
-            .range([blue, yellow, red])
-            .interpolate(d3.interpolateLab);
+        // var colorScale = d3.scaleLinear()
+        //     .domain([1, 5, 10])
+        //     .range([blue, yellow, red])
+        //     .interpolate(d3.interpolateLab);
+        var colorScale = d3
+            .scaleSequential()
+            .interpolator(d3.interpolateRdYlBu)
+            .domain([10, -5]);
 
         this.state = {
             start_time: 0,
@@ -73,22 +77,45 @@ class HeatMap extends React.Component {
         vsupLegendSvg.append("g").call(vsupLegend)
 
         // color legend
-        var colorLegend = vsup.legend.simpleLegend();
-        colorLegend
-            .scale(colorScale)
-            .size(160)
-            .x(0)
-            .y(0)
-            .title("Intensity reported");
-
         d3.select("#colorLegend").selectAll("svg").remove();
         let colorLegendSvg = d3
             .select("#colorLegend").append("svg")
-            .attr("width", 300)
-            .attr("height", 50)
+            .attr("width", 180)
+            .attr("height", 60)
             .append("g")
-            .attr("transform", "translate(15,0)");
-        colorLegendSvg.append("g").call(colorLegend)
+
+        var linearGradient = colorLegendSvg.append("defs").append("linearGradient")
+            .attr("id", `linear-gradient`);
+
+        linearGradient
+            .attr("x1", "0%")
+            .attr("y1", "0%")
+            .attr("x2", "100%")
+            .attr("y2", "0%");
+
+        //Set the color for the start (0%)
+        linearGradient.append("stop")
+            .attr("offset", "0%")
+            .attr("stop-color", colorScale(1));
+
+        linearGradient.append("stop")
+            .attr("offset", "50%")
+            .attr("stop-color", colorScale(5));
+
+        //Set the color for the end (100%)
+        linearGradient.append("stop")
+            .attr("offset", "100%")
+            .attr("stop-color", colorScale(10));
+
+        colorLegendSvg.append("rect")
+            .attr("width", 160)
+            .attr("height", 20)
+            .style("fill", `url(#linear-gradient)`)
+            .attr("x", 10)
+            .attr("y", 10)
+
+        colorLegendSvg.append("text").text("1").attr("x", 10).attr("y", 45);
+        colorLegendSvg.append("text").text("10").attr("x", 160).attr("y", 45)
     }
 
     drawHeatmap = (vsupScale, colorScale) => {
@@ -105,6 +132,7 @@ class HeatMap extends React.Component {
                 let curtime = start_time + i * interval;
                 let date = new Date(curtime);
                 let datestring = date.getFullYear() + "-" + (date.getMonth() + 1).toString().padStart(2, '0') + "-" + date.getDate().toString().padStart(2, '0') + " " + date.getHours().toString().padStart(2, '0') + ":" + date.getMinutes().toString().padStart(2, '0') + ":" + date.getSeconds().toString().padStart(2, '0');
+                let dateDisplay = (date.getMonth() + 1).toString() + "." + date.getDate() + " " + date.getHours() + ":" + date.getMinutes().toString().padStart(2, '0');
                 // console.log(datestring)
                 // console.log(data.filter(d => d.index == datestring))
                 data.filter(d => d.index == datestring).forEach(d => {
@@ -137,7 +165,7 @@ class HeatMap extends React.Component {
 
                     heatdata.push({
                         time: curtime,
-                        time_string: d.index,
+                        time_string: dateDisplay,
                         location: parseInt(d.location),
                         intensity_total: intensity / count,
                         uncertainty_total: uncertainty / count,
@@ -148,11 +176,11 @@ class HeatMap extends React.Component {
                         // buildings: { intensity: parseFloat(d.buildings_i), uncertainty: parseFloat(d.buildings_u) },
                     })
                 })
-                time_range.push(datestring);
+                time_range.push(dateDisplay);
             }
             console.log("heatdata", heatdata);
 
-            let margin = { left: 30, right: 10, top: 10, bottom: 10 },
+            let margin = { left: 30, right: 10, top: 30, bottom: 10 },
                 width = 1200 - margin.left - margin.right,
                 height = 1000 - margin.top - margin.bottom;
 
@@ -166,6 +194,10 @@ class HeatMap extends React.Component {
 
             // x scale
             let xScale = d3.scaleBand().range([0, width]).padding(0.1).domain(time_range);
+            svg.append("g").style("font-size", "12px").call(d3.axisTop(xScale)).call(g => {
+                g.select(".domain").remove();
+                g.selectAll("line").remove();
+            });
             // y scale
             // sort 
             let loc_intensity = Array.from({ length: 19 }, (_, i) => i + 1).map(i => {
@@ -186,9 +218,13 @@ class HeatMap extends React.Component {
             }
             console.log("yDomain", yDomain)
             let yScale = d3.scaleBand().range([0, height]).domain(yDomain).padding(0.1);
+            svg.append("g").style("font-size", "14px").call(d3.axisLeft(yScale)).call(g => {
+                g.select(".domain").remove();
+                g.selectAll("line").remove();
+            });
 
             // color scales
-            let colorScale = d3.scaleSequential().interpolator(d3.interpolateRdBu).domain([1, 10]);
+            // let colorScale = d3.scaleSequential().interpolator(d3.interpolateRdBu).domain([1, 10]);
 
             svg.selectAll()
                 .data(heatdata)
@@ -261,8 +297,8 @@ class HeatMap extends React.Component {
                 <input type="checkbox" id="buildingsCheck" value="buildings" onChange={this.handleAttribute} /> Buildings
                 <br />
                 <br />
+                <span>w/o uncertainty:</span><br />
                 <input type="radio" name="uncertaintyRadio" id="noUncertaintyRadio" value="noUncertainty" onChange={this.handleUncertainty} /> Damage reported <br />
-                <br />
                 <div id="colorLegend"></div>
                 <input type="radio" name="uncertaintyRadio" id="uncertaintyRadio" value="uncertainty" onChange={this.handleUncertainty} /> Damage reported + Uncertainty
                 <br />
