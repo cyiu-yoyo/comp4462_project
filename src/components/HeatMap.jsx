@@ -3,9 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import * as d3 from 'd3';
 import * as vsup from 'vsup';
 
-const loc_name = {
-
-}
+const loc_name = ["Palace Hills", "Northwest", "Old Town", "Safe Town", "Southwest", "Downtown", "Wilson Forest", "Scenic Vista", "Broadview", "Chapparal", "Terrapin Springs", "Pepper Mill", "Cheddarford", "Easton", "Weston", "Southton", "Oak Willow", "East Parton", "West Parton"]
 class HeatMap extends React.Component {
     constructor(props) {
         super(props);
@@ -123,7 +121,7 @@ class HeatMap extends React.Component {
             console.log("rawdata", data)
 
             // preprocess data
-            let start_time = Date.parse("2020-04-08 6:00:00")
+            let start_time = Date.parse("2020-04-08 8:00:00")
             let interval = 30 * 60 * 1000; // 30 min * 60 s * 1000 ms
             let heatdata = [], time_range = [];
             // fix num of time intervals
@@ -181,7 +179,7 @@ class HeatMap extends React.Component {
             }
             console.log("heatdata", heatdata);
 
-            let margin = { left: 30, right: 10, top: 30, bottom: 10 },
+            let margin = { left: 115, right: 10, top: 30, bottom: 10 },
                 width = 1200 - margin.left - margin.right,
                 height = 1000 - margin.top - margin.bottom;
 
@@ -217,6 +215,7 @@ class HeatMap extends React.Component {
             } else {
                 yDomain = loc_intensity.sort((a, b) => a.intensity_total - b.intensity_total).map(d => d.location)
             }
+            yDomain = yDomain.map(d => loc_name[d - 1])
             console.log("yDomain", yDomain)
             let yScale = d3.scaleBand().range([0, height]).domain(yDomain).padding(0.1);
             svg.append("g").style("font-size", "14px").call(d3.axisLeft(yScale)).call(g => {
@@ -232,7 +231,7 @@ class HeatMap extends React.Component {
                 .enter()
                 .append("rect")
                 .attr("x", (d) => xScale(d.time_string))
-                .attr("y", (d) => yScale(d.location))
+                .attr("y", (d) => yScale(loc_name[d.location - 1]))
                 .attr("width", xScale.bandwidth())
                 .attr("height", yScale.bandwidth())
                 .style("fill", (d) => {
@@ -281,7 +280,7 @@ class HeatMap extends React.Component {
     render() {
         return <div class="row">
             <div class="col-10">
-                <p>start time: {this.state.start_time}</p>
+                {/* <p>start time: {this.state.start_time}</p> */}
                 <div id="heatmap" />
             </div>
             <div class="col-2">
