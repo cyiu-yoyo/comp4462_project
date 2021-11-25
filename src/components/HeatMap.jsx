@@ -3,6 +3,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import * as d3 from 'd3';
 import * as vsup from 'vsup';
 
+const loc_name = {
+
+}
 class HeatMap extends React.Component {
     constructor(props) {
         super(props);
@@ -38,6 +41,8 @@ class HeatMap extends React.Component {
             colorScale
         }
     }
+
+
 
     componentDidMount() {
         console.log("HeatMap did mount...")
@@ -121,8 +126,10 @@ class HeatMap extends React.Component {
             let start_time = Date.parse("2020-04-08 6:00:00")
             let interval = 30 * 60 * 1000; // 30 min * 60 s * 1000 ms
             let heatdata = [], time_range = [];
-            for (let i = 0; i < 20; i++) {
-                // fix 20 time intervals
+            // fix num of time intervals
+            let numOfInterval = 15
+            for (let i = 0; i < numOfInterval; i++) {
+
                 let curtime = start_time + i * interval;
                 let date = new Date(curtime);
                 let datestring = date.getFullYear() + "-" + (date.getMonth() + 1).toString().padStart(2, '0') + "-" + date.getDate().toString().padStart(2, '0') + " " + date.getHours().toString().padStart(2, '0') + ":" + date.getMinutes().toString().padStart(2, '0') + ":" + date.getSeconds().toString().padStart(2, '0');

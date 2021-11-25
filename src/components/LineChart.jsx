@@ -139,7 +139,9 @@ class LineChart extends React.Component {
                 .attr("y", margin.top - 5)
                 .attr("fill", "currentColor")
                 .attr("text-anchor", "start")
-                .text(yLabel));
+                .text(yLabel)
+                .attr("transform", "translate(-50,80), rotate(-90)")
+                .style("font-size", 14));
 
         shakeSvg.append('g')
             .selectAll('path')
@@ -242,7 +244,7 @@ class LineChart extends React.Component {
             .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-        const axisTimeFormat = d3.timeFormat('%Y-%m-%d %H:%M');
+        const axisTimeFormat = d3.timeFormat('%m-%d %H:%M');
 
         const yLabel = "Num of Reports";
         const xLabel = "Time";
@@ -283,7 +285,9 @@ class LineChart extends React.Component {
                 .attr("y", margin.top - 5)
                 .attr("fill", "currentColor")
                 .attr("text-anchor", "start")
-                .text(yLabel));
+                .text(yLabel)
+                .attr("transform", "translate(-50,80), rotate(-90)")
+                .style("font-size", 14));
 
         svg.append('g')
             .selectAll('path')
@@ -345,9 +349,9 @@ class LineChart extends React.Component {
         }
 
         function mouseout() {
-            focus.style("opacity", 0)
+            // focus.style("opacity", 0)
             focusText.style("opacity", 0)
-            timeSpan.style("opacity", 0)
+            // timeSpan.style("opacity", 0)
         }
 
         svg
