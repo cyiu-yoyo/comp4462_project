@@ -114,7 +114,7 @@ class HeatMap extends React.Component {
 
     drawHeatmap = (vsupScale, colorScale) => {
 
-        d3.csv("./merge_ui.csv").then((data) => {
+        d3.csv("./merge_ui_std.csv").then((data) => {
             console.log("rawdata", data)
 
             // preprocess data

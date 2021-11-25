@@ -38,7 +38,7 @@ class CityMap extends React.Component {
                 .append("g")
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-            const projection = d3.geoIdentity().fitSize([width, height], geoData)
+            const projection = d3.geoIdentity().reflectY(true).fitSize([width, height], geoData)
             const path = d3.geoPath(projection);
 
             svg.selectAll("path")

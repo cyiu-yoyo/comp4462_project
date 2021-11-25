@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import CityMap from './CityMap';
 // import RadarChart from './RadarChart';
 import HeatMap from './HeatMap';
+import LineChart from './LineChart';
 import RadarChart from 'react-svg-radar-chart';
 import 'react-svg-radar-chart/build/css/index.css';
 
@@ -25,9 +26,9 @@ class DashBoard extends React.Component {
         const layout = [
             { i: 'a', x: 0, y: 0, w: 6, h: 9 },
             { i: 'b', x: 6, y: 0, w: 6, h: 9 },
-            { i: 'c', x: 0, y: 9, w: 12, h: 4 },
-            { i: 'd', x: 0, y: 13, w: 12, h: 4 },
-            { i: 'e', x: 0, y: 17, w: 12, h: 27 },
+            { i: 'c', x: 0, y: 9, w: 12, h: 5 },
+            { i: 'd', x: 0, y: 14, w: 12, h: 5 },
+            { i: 'e', x: 0, y: 18, w: 12, h: 27 },
         ];
         const rowHeight = 45;
         const { innerWidth: width, innerHeight: height } = window;
@@ -85,12 +86,13 @@ class DashBoard extends React.Component {
                     </div>
                 </div>
                 <div key="c">
-                    <div class="card" style={{ height: 4 * rowHeight }}>
+                    <div class="card" style={{ height: 5 * rowHeight }}>
                         <p style={{ backgroundColor: "#e9ecef", margin: "5px", paddingLeft: "5px" }}># of Reports</p>
+                        <LineChart></LineChart>
                     </div>
                 </div>
                 <div key="d">
-                    <div class="card" style={{ height: 4 * rowHeight }}>
+                    <div class="card" style={{ height: 5 * rowHeight }}>
                         <p style={{ backgroundColor: "#e9ecef", margin: "5px", paddingLeft: "5px" }}>Shaking Intensity</p>
                     </div>
                 </div>
