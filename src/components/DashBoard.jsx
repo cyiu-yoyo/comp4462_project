@@ -26,8 +26,8 @@ class DashBoard extends React.Component {
         const layout = [
             { i: 'a', x: 0, y: 0, w: 6, h: 9 },
             { i: 'b', x: 6, y: 0, w: 6, h: 9 },
-            { i: 'c', x: 0, y: 9, w: 12, h: 5 },
-            { i: 'd', x: 0, y: 14, w: 12, h: 5 },
+            { i: 'c', x: 0, y: 9, w: 12, h: 10 },
+            // { i: 'd', x: 0, y: 14, w: 12, h: 5 },
             { i: 'e', x: 0, y: 18, w: 12, h: 27 },
         ];
         const rowHeight = 45;
@@ -86,16 +86,16 @@ class DashBoard extends React.Component {
                     </div>
                 </div>
                 <div key="c">
-                    <div class="card" style={{ height: 5 * rowHeight }}>
-                        <p style={{ backgroundColor: "#e9ecef", margin: "5px", paddingLeft: "5px" }}># of Reports</p>
+                    <div class="card" style={{ height: 10 * rowHeight }}>
+                        <p style={{ backgroundColor: "#e9ecef", margin: "5px", paddingLeft: "5px" }}>Line Chart</p>
                         <LineChart></LineChart>
                     </div>
                 </div>
-                <div key="d">
+                {/* <div key="d">
                     <div class="card" style={{ height: 5 * rowHeight }}>
                         <p style={{ backgroundColor: "#e9ecef", margin: "5px", paddingLeft: "5px" }}>Shaking Intensity</p>
                     </div>
-                </div>
+                </div> */}
                 <div key="e">
                     <div class="card" style={{ height: 27 * rowHeight }}>
                         <p style={{ backgroundColor: "#e9ecef", margin: "5px", paddingLeft: "5px" }}>Heatmap</p>
