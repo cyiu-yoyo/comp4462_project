@@ -12,7 +12,7 @@ class DashBoard extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedRegion: [0, ""]
+            selectedRegion: [0, "Palace Hills"]
         }
     }
 
@@ -80,7 +80,9 @@ class DashBoard extends React.Component {
                                 />
                             </div>
                             <div class="col-4">
-                                <h3>{this.state.selectedRegion[1]}</h3>
+                                <h3>{this.state.selectedRegion[1]} </h3><br />
+                                <img src="./hospital.png" style={{ height: 30 }} /><span>  Hospitals: 1</span><br /><br />
+                                <img src="./nuclear.png" style={{ height: 30 }} /><span>  Nuclear Plants: 0</span>
                             </div>
                         </div>
                     </div>
