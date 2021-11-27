@@ -1,5 +1,5 @@
-# Our Visualization Interface
-Link: https://alicenie.github.io/comp4462_project/
+# COMP 4462 Project - Group 3 
+Visualization Interface: https://alicenie.github.io/comp4462_project/
 
 ---
 
