@@ -7,11 +7,19 @@ import csvdata from '../data/mc1_reports_data.csv';
 class LineChart extends React.Component {
     constructor(props) {
         super(props)
+
+        let startTimeLine = [];
+        for (let i = Date.parse("2020-04-06 00:00:00"); i < Date.parse("2020-04-11 12:00:00"); i += 1800000) {
+            startTimeLine.push(new Date(i))
+        }
+        console.log("start time line", startTimeLine)
+
         this.state = {
             startTime: "2020-04-08 17:50:00",
             intensity: 0,
             num_report: 0,
-            interval: 600
+            interval: 600,
+            startTimeLine: startTimeLine
         }
     }
 
@@ -72,10 +80,9 @@ class LineChart extends React.Component {
 
     drawLineChart = () => {
         d3.csv(csvdata).then((rawData) => {
-            console.log("raw data in line chart", rawData)
+            // console.log("raw data in line chart", rawData)
             this.drawShakeLineChart(rawData);
             this.drawReportLineChart(rawData);
-
         }).catch(function (error) {
             // handle error   
             console.log('error in loading linechart csv!', error)
@@ -86,7 +93,7 @@ class LineChart extends React.Component {
         // shake intensity line chart
         let timeUpperBound = this.d3ParseTime('2020-04-10 18:00');
         let shakeIntensityData = this.handleShakeData(rawData);
-        console.log("shake intensity line chart data", shakeIntensityData)
+        // console.log("shake intensity line chart data", shakeIntensityData)
 
         let margin = { left: 50, top: 10, right: 20, bottom: 30 },
             width = 1400 - margin.left - margin.right,
@@ -216,14 +223,26 @@ class LineChart extends React.Component {
                 // recover coordinate we need
                 let x0 = xScale.invert(d3.pointer(event)[0]);
                 console.log("x0", x0)
-                let i = bisect(shakeIntensityData, x0, 1);
-                let selectedData = shakeIntensityData[i];
-                console.log("selected data", i)
+                // let i = bisect(shakeIntensityData, x0, 1);
+                // console.log("array", shakeIntensityData)
+                // console.log("i", i)
+                // let selectedData = shakeIntensityData[i];
+                // console.log("selected data", selectedData)
+                let selectedStartTime = this.state.startTimeLine[d3.bisect(this.state.startTimeLine, x0)];
+                console.log("selected start time", selectedStartTime);
 
-                if (selectedData.time < timeUpperBound) {
-                    let startTime = selectedData.time;
-                    let intensity = selectedData.shake_intensity;
-                    this.setState({ startTime, intensity })
+                // if (selectedData.time < timeUpperBound) {
+                //     let startTime = selectedData.time;
+                //     let intensity = selectedData.shake_intensity;
+                //     this.setState({ startTime, intensity });
+                //     this.props.onChangeTime(startTime);
+                // }
+
+                if (selectedStartTime < timeUpperBound) {
+                    let startTime = selectedStartTime;
+                    // let intensity = selectedData.shake_intensity;
+                    this.setState({ startTime });
+                    this.props.onChangeTime(startTime);
                 }
             })
             .on('mouseout', () => {
@@ -376,6 +395,7 @@ class LineChart extends React.Component {
                         let startTime = selectedData.time;
                         let num_report = selectedData.num;
                         this.setState({ startTime, num_report })
+                        this.props.onChangeTime(startTime);
                     }
                 }
             })

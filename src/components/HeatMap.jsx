@@ -25,7 +25,7 @@ class HeatMap extends React.Component {
             .domain([10, -5]);
 
         this.state = {
-            start_time: 0,
+            start_time: this.props.start_time,
             end_time: 1,
             descend: true,
             attribute: {
@@ -44,14 +44,14 @@ class HeatMap extends React.Component {
 
 
     componentDidMount() {
-        console.log("HeatMap did mount...")
+        // console.log("HeatMap did mount...")
         this.drawHeatmap(this.state.vsupScale, this.state.colorScale);
         this.drawLegend(this.state.vsupScale, this.state.colorScale);
     }
 
     componentDidUpdate() {
-        console.log("HeatMap did update...")
-        this.drawHeatmap(this.state.vsupScale, this.state.colorScale);
+        // console.log("HeatMap did update...")
+        this.drawHeatmap(this.state.vsupScale, this.state.colorScale, this.props.start_time);
     }
 
     drawLegend = (vsupScale, colorScale) => {
@@ -116,13 +116,14 @@ class HeatMap extends React.Component {
         colorLegendSvg.append("text").text("10").attr("x", 160).attr("y", 45)
     }
 
-    drawHeatmap = (vsupScale, colorScale) => {
+    drawHeatmap = (vsupScale, colorScale, start_time) => {
 
         d3.csv(csvdata).then((data) => {
-            console.log("rawdata", data)
+            // console.log("heatmap rawdata", data)
 
             // preprocess data
-            let start_time = Date.parse("2020-04-08 8:00:00")
+            // let start_time = Date.parse("2020-04-08 8:00:00")
+            start_time = Date.parse(start_time);
             let interval = 30 * 60 * 1000; // 30 min * 60 s * 1000 ms
             let heatdata = [], time_range = [];
             // fix num of time intervals
@@ -178,7 +179,7 @@ class HeatMap extends React.Component {
                 })
                 time_range.push(dateDisplay);
             }
-            console.log("heatdata", heatdata);
+            // console.log("heatdata", heatdata);
 
             let margin = { left: 115, right: 10, top: 30, bottom: 10 },
                 width = 1200 - margin.left - margin.right,
@@ -209,7 +210,7 @@ class HeatMap extends React.Component {
                     }, 0)
                 }
             })
-            console.log("location intensity", loc_intensity)
+            // console.log("location intensity", loc_intensity)
             let yDomain;
             if (this.state.descend) {
                 yDomain = loc_intensity.sort((a, b) => b.intensity_total - a.intensity_total).map(d => d.location)
@@ -217,7 +218,7 @@ class HeatMap extends React.Component {
                 yDomain = loc_intensity.sort((a, b) => a.intensity_total - b.intensity_total).map(d => d.location)
             }
             yDomain = yDomain.map(d => loc_name[d - 1])
-            console.log("yDomain", yDomain)
+            // console.log("yDomain", yDomain)
             let yScale = d3.scaleBand().range([0, height]).domain(yDomain).padding(0.1);
             svg.append("g").style("font-size", "14px").call(d3.axisLeft(yScale)).call(g => {
                 g.select(".domain").remove();
@@ -249,13 +250,13 @@ class HeatMap extends React.Component {
     }
 
     handleOrder = () => {
-        console.log("handle order")
+        // console.log("handle order")
         let descend = document.getElementById("descendingRadio").checked;
         this.setState({ descend });
     }
 
     handleAttribute = () => {
-        console.log("handle attribute")
+        // console.log("handle attribute")
         let medical = document.getElementById("medicalCheck").checked;
         let power = document.getElementById("powerCheck").checked;
         let roads_and_bridges = document.getElementById("roads_and_bridgesCheck").checked;
@@ -273,7 +274,7 @@ class HeatMap extends React.Component {
     }
 
     handleUncertainty = () => {
-        console.log("handle uncertainty")
+        // console.log("handle uncertainty")
         let uncertainty = document.getElementById("uncertaintyRadio").checked;
         this.setState({ uncertainty });
     }

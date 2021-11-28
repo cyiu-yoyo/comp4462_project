@@ -47,14 +47,14 @@ class DashBoard extends React.Component {
 
     componentDidMount() {
         d3.csv(radarcsvdata).then((rawdata) => {
-            console.log("radar raw data", rawdata)
+            // console.log("radar raw data", rawdata)
             this.setState({ radarData: rawdata })
         }).catch(error => {
             console.log("error in loading radar csv", error)
         })
 
         d3.csv(prioritycsvdata).then((rawdata) => {
-            console.log("priority raw data", rawdata)
+            // console.log("priority raw data", rawdata)
             this.setState({ priorityData: rawdata })
         }).catch(error => {
             console.log("error in loading priority csv", error)
@@ -63,10 +63,15 @@ class DashBoard extends React.Component {
     }
 
     handleSelectRegion = (selectedRegion) => {
-        console.log("select region ", selectedRegion)
+        // console.log("select region ", selectedRegion)
         this.setState({ selectedRegion })
     }
 
+    handleChangeTime = (start_time) => {
+        console.log("handle change time", start_time)
+        let datestring = start_time.getFullYear() + "-" + (start_time.getMonth() + 1).toString().padStart(2, '0') + "-" + start_time.getDate().toString().padStart(2, '0') + " " + start_time.getHours().toString().padStart(2, '0') + ":" + start_time.getMinutes().toString().padStart(2, '0') + ":" + start_time.getSeconds().toString().padStart(2, '0');
+        this.setState({ start_time: datestring })
+    }
 
     render() {
         const layout = [
@@ -80,7 +85,7 @@ class DashBoard extends React.Component {
         const { innerWidth: width, innerHeight: height } = window;
 
         const selectedRawRadarData = this.state.radarData ? this.state.radarData.filter(d => d.index == this.state.start_time && d.location == this.state.selectedRegion[0]) : [];
-        console.log("selected radar data", selectedRawRadarData)
+        // console.log("selected radar data", selectedRawRadarData)
         let selectedRadarData = {
             buildings: 0,
             medical: 0,
@@ -99,7 +104,7 @@ class DashBoard extends React.Component {
         }
 
         const priority = this.state.priorityData.filter(d => d.start_time == this.state.start_time).map(d => parseFloat(d.priority_value))
-        console.log("priority", priority)
+        // console.log("priority", priority)
         return (<div>
             <GridLayout className="layout" layout={layout} cols={12} rowHeight={rowHeight} margin={[5, 1]} width={width}>
                 <div key="a">
@@ -154,7 +159,7 @@ class DashBoard extends React.Component {
                 <div key="c">
                     <div class="card" style={{ height: 10 * rowHeight }}>
                         <p style={{ backgroundColor: "#e9ecef", margin: "5px", paddingLeft: "5px" }}>Earthquake Hit Timeline</p>
-                        <LineChart></LineChart>
+                        <LineChart onChangeTime={(start_time) => this.handleChangeTime(start_time)}></LineChart>
                     </div>
                 </div>
                 {/* <div key="d">
@@ -165,7 +170,7 @@ class DashBoard extends React.Component {
                 <div key="e">
                     <div class="card" style={{ height: 27 * rowHeight }}>
                         <p style={{ backgroundColor: "#e9ecef", margin: "5px", paddingLeft: "5px" }}>{`Priority per Service & Neighborhood`}</p>
-                        <HeatMap></HeatMap>
+                        <HeatMap start_time={this.state.start_time}></HeatMap>
                     </div>
                 </div>
             </GridLayout>

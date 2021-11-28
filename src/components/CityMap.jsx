@@ -26,7 +26,7 @@ class CityMap extends React.Component {
     drawCityMap = () => {
         const geojsonLink = "https://raw.githubusercontent.com/huantingwei/comp4462/main/StHimark.geojson";
         d3.json(geojsonLink).then((geoData) => {
-            console.log("geoData", geoData)
+            // console.log("geoData", geoData)
 
             // const priorityPerArea = [10, 20, 50, 50, 20, 15, 65, 35, 50, 70, 85, 25, 50, 70, 85, 25, 90, 70, 10]
             const priorityPerArea = this.props.priority;
