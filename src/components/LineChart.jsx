@@ -144,13 +144,16 @@ class LineChart extends React.Component {
                 .style("font-size", 14));
 
         shakeSvg.append('g')
-            .selectAll('path')
-            .data([shakeIntensityData])
+            .selectAll('.bar')
+            .data(shakeIntensityData)
             .enter()
-            .append('path')
-            .attr('d', d => line(d))
-            .attr('fill', 'none')
-            .attr('stroke', 'SteelBlue')
+            .append('rect')
+            .attr("class", "bar")
+            .attr("x", function (d) { return xScale(d.time); })
+            .attr("y", function (d) { return yScale(d.shake_intensity) - margin.bottom; })
+            .attr("width", (width - margin.left - margin.right) / shakeIntensityData.length)
+            .attr("height", function (d) { return height - yScale(d.shake_intensity); })
+            .style("fill", "SteelBlue");
 
         const focus = shakeSvg
             .append('g')

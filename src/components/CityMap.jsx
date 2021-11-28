@@ -24,7 +24,7 @@ class CityMap extends React.Component {
         d3.json(geojsonLink).then((geoData) => {
             console.log("geoData", geoData)
 
-            const priorityPerArea = [10, 20, 50, 100, 20, 15, 25, 35, 50, 70, 85, 25, 50, 70, 85, 25, 50, 70, 10]
+            const priorityPerArea = [10, 20, 50, 50, 20, 15, 65, 35, 50, 70, 85, 25, 50, 70, 85, 25, 90, 70, 10]
 
             let margin = { left: 10, right: 10, top: 5, bottom: 10 },
                 width = 700 - margin.left - margin.right,

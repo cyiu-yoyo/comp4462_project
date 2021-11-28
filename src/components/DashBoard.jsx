@@ -43,7 +43,7 @@ class DashBoard extends React.Component {
                 </div>
                 <div key="b">
                     <div class="card" style={{ height: 9 * rowHeight }}>
-                        <p style={{ backgroundColor: "#e9ecef", margin: "5px", paddingLeft: "5px" }}>Radar Chart</p>
+                        <p style={{ backgroundColor: "#e9ecef", margin: "5px", paddingLeft: "5px" }}>Neighborhood Breakdown</p>
                         {/* <RadarChart></RadarChart> */}
                         <div class="row" style={{ marginLeft: 30, marginTop: 10 }}>
                             <div class="col-8">
@@ -59,11 +59,11 @@ class DashBoard extends React.Component {
                                     data={[
                                         {
                                             data: {
-                                                buildings: 0.4,
-                                                medical: 0.7,
-                                                sewer_and_water: 0.4,
-                                                roads_and_bridges: 0.8,
-                                                power: 0.5
+                                                buildings: 0.35,
+                                                medical: 0,
+                                                sewer_and_water: 0.15,
+                                                roads_and_bridges: 0.65,
+                                                power: 0.75
                                             },
                                             meta: { color: '#fc9272' }
                                         },
@@ -81,7 +81,7 @@ class DashBoard extends React.Component {
                             </div>
                             <div class="col-4">
                                 <h3>{this.state.selectedRegion[1]} </h3><br />
-                                <img src="./hospital.png" style={{ height: 30 }} /><span>  Hospitals: 1</span><br /><br />
+                                <img src="./hospital.png" style={{ height: 30 }} /><span>  Hospitals: 0</span><br /><br />
                                 <img src="./nuclear.png" style={{ height: 30 }} /><span>  Nuclear Plants: 0</span>
                             </div>
                         </div>
@@ -89,7 +89,7 @@ class DashBoard extends React.Component {
                 </div>
                 <div key="c">
                     <div class="card" style={{ height: 10 * rowHeight }}>
-                        <p style={{ backgroundColor: "#e9ecef", margin: "5px", paddingLeft: "5px" }}>Line Chart</p>
+                        <p style={{ backgroundColor: "#e9ecef", margin: "5px", paddingLeft: "5px" }}>Earthquake Hit Timeline</p>
                         <LineChart></LineChart>
                     </div>
                 </div>
@@ -100,7 +100,7 @@ class DashBoard extends React.Component {
                 </div> */}
                 <div key="e">
                     <div class="card" style={{ height: 27 * rowHeight }}>
-                        <p style={{ backgroundColor: "#e9ecef", margin: "5px", paddingLeft: "5px" }}>Heatmap</p>
+                        <p style={{ backgroundColor: "#e9ecef", margin: "5px", paddingLeft: "5px" }}>{`Priority per Service & Neighborhood`}</p>
                         <HeatMap></HeatMap>
                     </div>
                 </div>

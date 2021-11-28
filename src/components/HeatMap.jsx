@@ -289,7 +289,7 @@ class HeatMap extends React.Component {
                 <input type="radio" name="orderRadio" id="descendingRadio" value="descending" onChange={this.handleOrder} /> Descending
                 <br />
                 <br />
-                <span>Selected attribute:</span><br />
+                <span>Selected service:</span><br />
                 <input type="checkbox" id="medicalCheck" value="medical" onChange={this.handleAttribute} /> Medical <br />
                 <input type="checkbox" id="powerCheck" value="power" onChange={this.handleAttribute} /> Power<br />
                 <input type="checkbox" id="roads_and_bridgesCheck" value="roads_and_bridges" onChange={this.handleAttribute} /> Roads and Bridges<br />
