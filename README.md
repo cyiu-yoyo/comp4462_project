@@ -1,3 +1,8 @@
+# COMP 4462 Project - Group 3 
+Visualization Interface: https://alicenie.github.io/comp4462_project/
+
+---
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
