@@ -11,12 +11,16 @@ class CityMap extends React.Component {
         this.drawCityMap();
     }
 
+    componentDidUpdate() {
+        this.drawCityMap();
+    }
+
     priorityColor = (obj, priorityData) => {
         const colors = d3.scaleLinear()
-            .domain([10, 100])
+            .domain([0, 1])
             .range(["PeachPuff", "FireBrick"]);
-
-        return colors(priorityData[obj.properties.Id - 1])
+        let priority = priorityData[obj.properties.Id - 1];
+        return priority > -1 ? colors(priority) : "#fff5f0"
     }
 
     drawCityMap = () => {
@@ -24,7 +28,8 @@ class CityMap extends React.Component {
         d3.json(geojsonLink).then((geoData) => {
             console.log("geoData", geoData)
 
-            const priorityPerArea = [10, 20, 50, 50, 20, 15, 65, 35, 50, 70, 85, 25, 50, 70, 85, 25, 90, 70, 10]
+            // const priorityPerArea = [10, 20, 50, 50, 20, 15, 65, 35, 50, 70, 85, 25, 50, 70, 85, 25, 90, 70, 10]
+            const priorityPerArea = this.props.priority;
 
             let margin = { left: 10, right: 10, top: 5, bottom: 10 },
                 width = 700 - margin.left - margin.right,
@@ -46,7 +51,7 @@ class CityMap extends React.Component {
                 .enter()
                 .append("path")
                 .attr("d", path)
-                .style("stroke", "#fff")
+                .style("stroke", "grey")
                 .style("fill", (d) => this.priorityColor(d, priorityPerArea))
                 .attr("class", "areas")
                 .on("mouseover", function (event, d) {

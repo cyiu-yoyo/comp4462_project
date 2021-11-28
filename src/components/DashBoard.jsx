@@ -7,13 +7,59 @@ import HeatMap from './HeatMap';
 import LineChart from './LineChart';
 import RadarChart from 'react-svg-radar-chart';
 import 'react-svg-radar-chart/build/css/index.css';
+import * as d3 from 'd3';
+import radarcsvdata from '../data/merge_10h_i.csv';
+import prioritycsvdata from '../data/priority_map.csv';
+import hospital_img from '../hospital.png';
+import nuclear_img from '../nuclear.png';
 
+const facilities = {
+    1: [1, 0],
+    2: [0, 0],
+    3: [1, 0],
+    4: [0, 1],
+    5: [1, 0],
+    6: [1, 0],
+    7: [0, 0],
+    8: [0, 0],
+    9: [1, 0],
+    10: [0, 0],
+    11: [1, 0],
+    12: [0, 0],
+    13: [0, 0],
+    14: [0, 0],
+    15: [0, 0],
+    16: [1, 0],
+    17: [0, 0],
+    18: [0, 0],
+    19: [0, 0]
+}
 class DashBoard extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedRegion: [0, "Palace Hills"]
+            selectedRegion: [1, "Palace Hills"],
+            radarData: [],
+            priorityData: [],
+            start_time: "2020-04-08 08:00:00"
         }
+    }
+
+    componentDidMount() {
+        d3.csv(radarcsvdata).then((rawdata) => {
+            console.log("radar raw data", rawdata)
+            this.setState({ radarData: rawdata })
+        }).catch(error => {
+            console.log("error in loading radar csv", error)
+        })
+
+        d3.csv(prioritycsvdata).then((rawdata) => {
+            console.log("priority raw data", rawdata)
+            this.setState({ priorityData: rawdata })
+        }).catch(error => {
+            console.log("error in loading priority csv", error)
+        })
+
     }
 
     handleSelectRegion = (selectedRegion) => {
@@ -33,12 +79,36 @@ class DashBoard extends React.Component {
         const rowHeight = 45;
         const { innerWidth: width, innerHeight: height } = window;
 
+        const selectedRawRadarData = this.state.radarData ? this.state.radarData.filter(d => d.index == this.state.start_time && d.location == this.state.selectedRegion[0]) : [];
+        console.log("selected radar data", selectedRawRadarData)
+        let selectedRadarData = {
+            buildings: 0,
+            medical: 0,
+            sewer_and_water: 0,
+            roads_and_bridges: 0,
+            power: 0
+        }
+        if (selectedRawRadarData.length > 0) {
+            selectedRadarData = {
+                buildings: parseFloat(selectedRawRadarData[0].buildings) > 0 ? (parseFloat(selectedRawRadarData[0].buildings) / 10) : 0,
+                medical: parseFloat(selectedRawRadarData[0].medical) > 0 ? (parseFloat(selectedRawRadarData[0].medical) / 10) : 0,
+                sewer_and_water: parseFloat(selectedRawRadarData[0].sewer_and_water) > 0 ? (parseFloat(selectedRawRadarData[0].sewer_and_water) / 10) : 0,
+                roads_and_bridges: parseFloat(selectedRawRadarData[0].roads_and_bridges) > 0 ? (parseFloat(selectedRawRadarData[0].roads_and_bridges) / 10) : 0,
+                power: parseFloat(selectedRawRadarData[0].power) > 0 ? (parseFloat(selectedRawRadarData[0].power) / 10) : 0
+            }
+        }
+
+        const priority = this.state.priorityData.filter(d => d.start_time == this.state.start_time).map(d => parseFloat(d.priority_value))
+        console.log("priority", priority)
         return (<div>
             <GridLayout className="layout" layout={layout} cols={12} rowHeight={rowHeight} margin={[5, 1]} width={width}>
                 <div key="a">
                     <div class="card" style={{ height: 9 * rowHeight }}>
                         <p style={{ backgroundColor: "#e9ecef", margin: "5px", paddingLeft: "5px" }}>City Map</p>
-                        <CityMap onSelectRegion={(selectedRegion) => this.handleSelectRegion(selectedRegion)}></CityMap>
+                        <CityMap
+                            priority={priority}
+                            onSelectRegion={(selectedRegion) => this.handleSelectRegion(selectedRegion)}
+                        ></CityMap>
                     </div>
                 </div>
                 <div key="b">
@@ -58,13 +128,7 @@ class DashBoard extends React.Component {
                                     }}
                                     data={[
                                         {
-                                            data: {
-                                                buildings: 0.35,
-                                                medical: 0,
-                                                sewer_and_water: 0.15,
-                                                roads_and_bridges: 0.65,
-                                                power: 0.75
-                                            },
+                                            data: selectedRadarData,
                                             meta: { color: '#fc9272' }
                                         },
                                     ]}
@@ -81,8 +145,8 @@ class DashBoard extends React.Component {
                             </div>
                             <div class="col-4">
                                 <h3>{this.state.selectedRegion[1]} </h3><br />
-                                <img src="./hospital.png" style={{ height: 30 }} /><span>  Hospitals: 0</span><br /><br />
-                                <img src="./nuclear.png" style={{ height: 30 }} /><span>  Nuclear Plants: 0</span>
+                                <img src={hospital_img} style={{ height: 30 }} /><span>  Hospitals: {facilities[this.state.selectedRegion[0]][0]}</span><br /><br />
+                                <img src={nuclear_img} style={{ height: 30 }} /><span>  Nuclear Plants: {facilities[this.state.selectedRegion[0]][1]}</span>
                             </div>
                         </div>
                     </div>

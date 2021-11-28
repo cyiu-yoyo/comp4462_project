@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import * as d3 from 'd3';
 import * as vsup from 'vsup';
+import csvdata from '../data/merge_ui_std.csv';
 
 const loc_name = ["Palace Hills", "Northwest", "Old Town", "Safe Town", "Southwest", "Downtown", "Wilson Forest", "Scenic Vista", "Broadview", "Chapparal", "Terrapin Springs", "Pepper Mill", "Cheddarford", "Easton", "Weston", "Southton", "Oak Willow", "East Parton", "West Parton"]
 class HeatMap extends React.Component {
@@ -117,7 +118,7 @@ class HeatMap extends React.Component {
 
     drawHeatmap = (vsupScale, colorScale) => {
 
-        d3.csv("./merge_ui_std.csv").then((data) => {
+        d3.csv(csvdata).then((data) => {
             console.log("rawdata", data)
 
             // preprocess data

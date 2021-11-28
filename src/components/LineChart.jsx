@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import * as d3 from 'd3';
-import _ from "lodash";
+import _, { rearg } from "lodash";
 import moment from 'moment';
+import csvdata from '../data/mc1_reports_data.csv';
 
 class LineChart extends React.Component {
     constructor(props) {
@@ -70,13 +71,14 @@ class LineChart extends React.Component {
     }
 
     drawLineChart = () => {
-        d3.csv('./mc1-reports-data.csv').then((rawData) => {
+        d3.csv(csvdata).then((rawData) => {
+            console.log("raw data in line chart", rawData)
             this.drawShakeLineChart(rawData);
             this.drawReportLineChart(rawData);
 
         }).catch(function (error) {
             // handle error   
-            console.log('error in loading linechart csv!')
+            console.log('error in loading linechart csv!', error)
         })
     }
 
