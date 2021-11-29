@@ -241,7 +241,10 @@ class LineChart extends React.Component {
                 if (selectedStartTime < timeUpperBound) {
                     let startTime = selectedStartTime;
                     // let intensity = selectedData.shake_intensity;
-                    this.setState({ startTime });
+                    let intensity = 0;
+                    let selectedData = shakeIntensityData.filter(d => d.time == selectedStartTime)
+                    if (selectedData.length > 0) intensity = selectedData[0].shake_intensity;
+                    this.setState({ startTime, intensity });
                     this.props.onChangeTime(startTime);
                 }
             })
@@ -388,15 +391,21 @@ class LineChart extends React.Component {
             .on('mousemove', (event) => {
                 {
                     let x0 = xScale.invert(d3.pointer(event)[0]);
-                    let i = bisect(data, x0, 1);
-                    let selectedData = data[i];
+                    // let i = bisect(data, x0, 1);
+                    // let selectedData = data[i];
+                    let selectedStartTime = this.state.startTimeLine[d3.bisect(this.state.startTimeLine, x0)];
 
-                    if (selectedData.time < timeUpperBound) {
-                        let startTime = selectedData.time;
-                        let num_report = selectedData.num;
-                        this.setState({ startTime, num_report })
+                    if (selectedStartTime < timeUpperBound) {
+                        let startTime = selectedStartTime;
+                        this.setState({ startTime });
                         this.props.onChangeTime(startTime);
                     }
+                    // if (selectedData.time < timeUpperBound) {
+                    //     let startTime = selectedData.time;
+                    //     let num_report = selectedData.num;
+                    //     this.setState({ startTime, num_report })
+                    //     this.props.onChangeTime(startTime);
+                    // }
                 }
             })
             .on('mouseout', mouseout);
