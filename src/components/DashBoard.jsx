@@ -60,6 +60,20 @@ class DashBoard extends React.Component {
             console.log("error in loading priority csv", error)
         })
 
+        // let svg = d3
+        //     .select("#radar_legend").append("svg")
+        //     .attr("width", 300)
+        //     .attr("height", 400)
+        //     .append("g")
+        //     .attr("transform", "translate(0,150)")
+
+        // // x scale
+        // let xScale = d3.scaleBand().range([0, 100]).padding(0.1).domain([0, 3.3, 6.6, 10]);
+        // svg.append("g").style("font-size", "12px").call(d3.axisTop(xScale))
+        // .call(g => {
+        //     g.select(".domain").remove();
+        //     g.selectAll("line").remove();
+        // });
     }
 
     handleSelectRegion = (selectedRegion) => {
@@ -145,6 +159,7 @@ class DashBoard extends React.Component {
                                             fontSize: 15,
                                             fontFamily: 'sans-serif'
                                         }),
+                                        axes: true
                                     }}
                                 />
                             </div>
@@ -152,6 +167,7 @@ class DashBoard extends React.Component {
                                 <h3>{this.state.selectedRegion[1]} </h3><br />
                                 <img src={hospital_img} style={{ height: 30 }} /><span>  Hospitals: {facilities[this.state.selectedRegion[0]][0]}</span><br /><br />
                                 <img src={nuclear_img} style={{ height: 30 }} /><span>  Nuclear Plants: {facilities[this.state.selectedRegion[0]][1]}</span>
+                                <div id="radar_legend"></div>
                             </div>
                         </div>
                     </div>
@@ -169,7 +185,7 @@ class DashBoard extends React.Component {
                 </div> */}
                 <div key="e">
                     <div class="card" style={{ height: 27 * rowHeight }}>
-                        <p style={{ backgroundColor: "#e9ecef", margin: "5px", paddingLeft: "5px" }}>{`Priority per Service & Neighborhood`}</p>
+                        <p style={{ backgroundColor: "#e9ecef", margin: "5px", paddingLeft: "5px" }}>{`Damage per Service & Neighborhood`}</p>
                         <HeatMap start_time={this.state.start_time}></HeatMap>
                     </div>
                 </div>
