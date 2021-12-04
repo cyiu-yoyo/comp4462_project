@@ -127,7 +127,7 @@ class HeatMap extends React.Component {
             let interval = 30 * 60 * 1000; // 30 min * 60 s * 1000 ms
             let heatdata = [], time_range = [];
             // fix num of time intervals
-            let numOfInterval = 15
+            let numOfInterval = 20
             for (let i = 0; i < numOfInterval; i++) {
 
                 let curtime = start_time + i * interval;
